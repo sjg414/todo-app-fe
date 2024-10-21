@@ -1,0 +1,2 @@
+/api/* https://todo-app-jg-ead69f00972a.herokuapp.com/api/:splat 200
+/* /index.html 200
