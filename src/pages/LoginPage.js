@@ -25,7 +25,9 @@ const LoginPage = () => {
         setUser(response.data.user);
         sessionStorage.setItem("token", response.data.token); //세션스토리지에 토큰 값 저장
         api.defaults.headers["authorization"] = "Bearer " + response.data.token; //헤더에 토큰 값 저장(get 호출 시 BE에서 헤더에서 토큰값을 읽기 위해서)
-        dispatch(authenticateAction.login(response.data.token)); //dispatch로 login action 던지기
+        dispatch(
+          authenticateAction.login(response.data.token, response.data.user)
+        ); //dispatch로 login action 던지기
         setError("");
         alert("로그인에 성공하였습니다.");
         navigate("/");

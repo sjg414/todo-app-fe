@@ -1,8 +1,8 @@
 import { authenticateActions } from "../reducer/authenticateReducer";
 
-function login(token) {
+function login(token, user) {
   return (dispatch, getState) => {
-    dispatch(authenticateActions.loginSuccess({ token }));
+    dispatch(authenticateActions.loginSuccess({ token, user }));
   };
 }
 
