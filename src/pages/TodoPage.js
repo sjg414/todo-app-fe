@@ -68,7 +68,7 @@ const TodoPage = () => {
   return (
     <Container>
       <Row className="add-item-row">
-        <Col xs={12} sm={9}>
+        <Col xs={12} sm={9} lg={8} md={7}>
           <input
             type="text"
             placeholder="할일을 입력하세요"
@@ -77,12 +77,12 @@ const TodoPage = () => {
             value={todoValue}
           />
         </Col>
-        <Col xs={12} sm={2}>
+        <Col xs={12} sm={2} lg={2} md={3}>
           <button onClick={addTodo} className="button-add">
             추가
           </button>
         </Col>
-        <Col xs={12} sm={1}>
+        <Col xs={12} sm={1} lg={2} md={2}>
           <Button variant="success" onClick={logout}>
             로그아웃
           </Button>
