@@ -25,15 +25,16 @@ const LoginPage = () => {
         setUser(response.data.user);
         sessionStorage.setItem("token", response.data.token); //세션스토리지에 토큰 값 저장
         api.defaults.headers["authorization"] = "Bearer " + response.data.token; //헤더에 토큰 값 저장(get 호출 시 BE에서 헤더에서 토큰값을 읽기 위해서)
-        dispatch(authenticateAction.login(response.data.token));
+        dispatch(authenticateAction.login(response.data.token)); //dispatch로 login action 던지기
         setError("");
         alert("로그인에 성공하였습니다.");
         navigate("/");
       } else {
-        throw new Error(response.message);
+        throw new Error(response.data.error);
       }
     } catch (error) {
       setError(error.message);
+      console.log(error.message);
     }
   };
   return (
@@ -47,6 +48,7 @@ const LoginPage = () => {
             type="email"
             placeholder="Enter email"
             onChange={(event) => setEmail(event.target.value)}
+            required
           />
         </Form.Group>
 
@@ -56,6 +58,7 @@ const LoginPage = () => {
             type="password"
             placeholder="Password"
             onChange={(event) => setPassword(event.target.value)}
+            required
           />
         </Form.Group>
         <div className="button-box">

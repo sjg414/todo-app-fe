@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   token: "",
@@ -10,10 +10,12 @@ const authenticateSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess(state, action) {
+      //로그인 성공 시 토큰값 저장 및 authenticate 값 true로 변경
       state.token = action.payload.token;
       state.authenticate = true;
     },
     logoutSuccess(state, action) {
+      //로그아웃 시 초기화
       state.token = "";
       state.authenticate = false;
     },

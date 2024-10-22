@@ -13,21 +13,22 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); //새로고침 방지
     try {
-      if (password === secPassword) {
-        const response = await api.post("/user", { name, email, password });
-        if (response.status === 200) {
-          alert("회원가입이 완료되었습니다.");
-          navigate("/login");
-        } else {
-          throw new Error(response.data.error);
-        }
-      } else {
+      if (password !== secPassword) {
         throw new Error("비밀번호가 일치하지 않습니다. 다시 입력해주세요!");
+      }
+
+      const response = await api.post("/user", { name, email, password });
+      if (response.status === 200) {
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
+      } else {
+        throw new Error(response.data.error);
       }
     } catch (error) {
       setError(error.message);
+      console.log(error.message);
     }
   };
 
@@ -44,6 +45,7 @@ const RegisterPage = () => {
             onChange={(event) => {
               setName(event.target.value);
             }}
+            required
           />
         </Form.Group>
 
@@ -55,6 +57,7 @@ const RegisterPage = () => {
             onChange={(event) => {
               setEmail(event.target.value);
             }}
+            required
           />
         </Form.Group>
 
@@ -66,6 +69,7 @@ const RegisterPage = () => {
             onChange={(event) => {
               setPassword(event.target.value);
             }}
+            required
           />
         </Form.Group>
 
@@ -77,12 +81,18 @@ const RegisterPage = () => {
             onChange={(event) => {
               setSecPassword(event.target.value);
             }}
+            required
           />
         </Form.Group>
-
-        <Button className="button-primary" type="submit">
-          회원가입
-        </Button>
+        {!name || !email || !password || !secPassword ? (
+          <Button variant="secondary" type="submit" disabled>
+            회원가입
+          </Button>
+        ) : (
+          <Button className="button-primary" type="submit">
+            회원가입
+          </Button>
+        )}
       </Form>
     </div>
   );
