@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../utils/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authenticateAction } from "../redux/actions/authenticateAction";
 
 const LoginPage = () => {
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,12 +22,9 @@ const LoginPage = () => {
       const response = await api.post("/user/login", { email, password });
       if (response.status === 200) {
         //로그인 성공 시
-        setUser(response.data.user);
         sessionStorage.setItem("token", response.data.token); //세션스토리지에 토큰 값 저장
         api.defaults.headers["authorization"] = "Bearer " + response.data.token; //헤더에 토큰 값 저장(get 호출 시 BE에서 헤더에서 토큰값을 읽기 위해서)
-        dispatch(
-          authenticateAction.login(response.data.token, response.data.user)
-        ); //dispatch로 login action 던지기
+        dispatch(authenticateAction.login(response.data.user)); //dispatch로 login action 던지기
         setError("");
         alert("로그인에 성공하였습니다.");
         navigate("/");
@@ -39,6 +36,11 @@ const LoginPage = () => {
       console.log(error.message);
     }
   };
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="display-center">
       {error && <div className="error-font">{error}</div>}
