@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/reducer/authenticateSlice";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -10,6 +11,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [secPassword, setSecPassword] = useState("");
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -18,17 +20,9 @@ const RegisterPage = () => {
       if (password !== secPassword) {
         throw new Error("비밀번호가 일치하지 않습니다. 다시 입력해주세요!");
       }
-
-      const response = await api.post("/user", { name, email, password });
-      if (response.status === 200) {
-        alert("회원가입이 완료되었습니다.");
-        navigate("/login");
-      } else {
-        throw new Error(response.data.error);
-      }
+      dispatch(registerUser({ email, name, password, navigate }));
     } catch (error) {
       setError(error.message);
-      console.log(error.message);
     }
   };
 

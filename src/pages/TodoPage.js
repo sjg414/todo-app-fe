@@ -5,8 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { useDispatch } from "react-redux";
-import { authenticateAction } from "../redux/actions/authenticateAction";
 import { Button } from "react-bootstrap";
+import { logout } from "../redux/reducer/authenticateSlice";
 
 const TodoPage = () => {
   const [todoList, setTodoList] = useState([]);
@@ -61,8 +61,8 @@ const TodoPage = () => {
     }
   };
 
-  const logout = () => {
-    dispatch(authenticateAction.logout());
+  const handleLogout = () => {
+    dispatch(logout());
     alert("로그아웃 되었습니다.");
   };
   return (
@@ -83,7 +83,7 @@ const TodoPage = () => {
           </button>
         </Col>
         <Col xs={12} sm={1} lg={2} md={2}>
-          <Button variant="success" onClick={logout}>
+          <Button variant="success" onClick={handleLogout}>
             로그아웃
           </Button>
         </Col>

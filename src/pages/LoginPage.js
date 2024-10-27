@@ -2,48 +2,37 @@ import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../utils/api";
+
 import { useDispatch, useSelector } from "react-redux";
-import { authenticateAction } from "../redux/actions/authenticateAction";
+import { loginWithEmail } from "../redux/reducer/authenticateSlice";
+import { clearErrors } from "../redux/reducer/authenticateSlice";
 
 const LoginPage = () => {
-  const user = useSelector((state) => state.auth.user);
+  const { user, loginError } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      const response = await api.post("/user/login", { email, password });
-      if (response.status === 200) {
-        //로그인 성공 시
-        sessionStorage.setItem("token", response.data.token); //세션스토리지에 토큰 값 저장
-        api.defaults.headers["authorization"] = "Bearer " + response.data.token; //헤더에 토큰 값 저장(get 호출 시 BE에서 헤더에서 토큰값을 읽기 위해서)
-        dispatch(authenticateAction.login(response.data.user)); //dispatch로 login action 던지기
-        setError("");
-        alert("로그인에 성공하였습니다.");
-        navigate("/");
-      } else {
-        throw new Error(response.data.error);
-      }
-    } catch (error) {
-      setError(error.message);
-      console.log(error.message);
-    }
+    dispatch(loginWithEmail({ email, password }));
   };
 
   if (user) {
-    return <Navigate to="/" />;
+    navigate("/");
   }
 
+  useEffect(() => {
+    if (loginError) {
+      dispatch(clearErrors());
+    }
+  }, [navigate, user]);
   return (
     <div className="display-center">
-      {error && <div className="error-font">{error}</div>}
+      {loginError && <div className="error-font">{loginError}</div>}
       <Form className="login-box" onSubmit={handleLogin}>
         <h1>로그인</h1>
         <Form.Group className="mb-3" controlId="formBasicEmail">
